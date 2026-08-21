@@ -6,6 +6,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
 import { env } from './config/env';
 import { apiRateLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
@@ -49,6 +50,20 @@ app.use('/api/rewrite', rewriteRoutes);
 app.use('/api/benchmark', benchmarkRoutes);
 app.use('/api/analyses', historyRoutes);
 app.use('/api/personas', personaRoutes);
+
+// Catch unhandled API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ success: false, error: { message: 'API Route Not Found' } });
+});
+
+// ── Serve Frontend in Production ─────────────────────────────────────────────
+const clientBuildPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientBuildPath));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
+
 // ── Global Error Handler (must be last) ──────────────────────────────────────
 
 app.use(errorHandler);
