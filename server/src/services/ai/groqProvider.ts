@@ -28,10 +28,10 @@ export class GroqProvider {
     const systemPrompt = buildAnalysisSystemPrompt();
     const userPrompt = buildAnalysisUserPrompt(text, platform);
 
-    // Primary: llama-3.3-70b-versatile
+    // Primary: groq/compound
     try {
       const response = await this.client.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+        model: 'groq/compound',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
@@ -48,9 +48,9 @@ export class GroqProvider {
         `[GroqProvider] Primary llama3-70b failed: ${primaryError?.message}. Cascading to llama3-8b...`
       );
 
-      // Fallback: llama-3.1-8b-instant
+      // Fallback: groq/compound-mini
       const fallbackResponse = await this.client.chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'groq/compound-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
@@ -75,7 +75,7 @@ export class GroqProvider {
 
     try {
       const response = await this.client.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+        model: 'groq/compound',
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         temperature: 0.7,
@@ -83,9 +83,9 @@ export class GroqProvider {
       const raw = response.choices[0]?.message?.content || '{}';
       return { data: JSON.parse(raw), modelUsed: 'groq-llama3-70b' };
     } catch (error) {
-      console.warn(`[GroqProvider] Primary rewrite failed, cascading to 8b...`);
+      console.warn(`[GroqProvider] Primary rewrite failed, cascading to 8b...`, error);
       const fallbackResponse = await this.client.chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'groq/compound-mini',
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         temperature: 0.7,
@@ -104,7 +104,7 @@ export class GroqProvider {
 
     try {
       const response = await this.client.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+        model: 'groq/compound',
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         temperature: 0.3,
@@ -112,9 +112,9 @@ export class GroqProvider {
       const raw = response.choices[0]?.message?.content || '{}';
       return { data: JSON.parse(raw), modelUsed: 'groq-llama3-70b' };
     } catch (error) {
-      console.warn(`[GroqProvider] Primary benchmark failed, cascading to 8b...`);
+      console.warn(`[GroqProvider] Primary benchmark failed, cascading to 8b...`, error);
       const fallbackResponse = await this.client.chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'groq/compound-mini',
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         temperature: 0.3,
