@@ -28,10 +28,10 @@ export class GeminiProvider {
     const systemInstruction = buildAnalysisSystemPrompt();
     const prompt = buildAnalysisUserPrompt(text, platform);
 
-    // Primary: gemini-3.6-flash
+    // Primary: gemini-1.5-flash
     try {
       const model = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         systemInstruction,
         generationConfig: {
           responseMimeType: 'application/json',
@@ -42,15 +42,15 @@ export class GeminiProvider {
       const response = await model.generateContent(prompt);
       const rawText = response.response.text();
       const parsed = this.parseJson<AnalysisResult>(rawText);
-      return { data: parsed, modelUsed: 'gemini-3.6-flash' };
+      return { data: parsed, modelUsed: 'gemini-1.5-flash' };
     } catch (primaryError: any) {
       console.warn(
-        `[GeminiProvider] Primary model gemini-3.6-flash failed: ${primaryError?.message}. Cascading...`
+        `[GeminiProvider] Primary model gemini-1.5-flash failed: ${primaryError?.message}. Cascading...`
       );
 
-      // Fallback: gemini-3.6-flash
+      // Fallback: gemini-1.5-flash
       const fallbackModel = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         systemInstruction,
         generationConfig: {
           responseMimeType: 'application/json',
@@ -61,7 +61,7 @@ export class GeminiProvider {
       const response = await fallbackModel.generateContent(prompt);
       const rawText = response.response.text();
       const parsed = this.parseJson<AnalysisResult>(rawText);
-      return { data: parsed, modelUsed: 'gemini-3.6-flash' };
+      return { data: parsed, modelUsed: 'gemini-1.5-flash' };
     }
   }
 
@@ -85,19 +85,19 @@ export class GeminiProvider {
 
     try {
       const model = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
       });
       const response = await model.generateContent(prompt);
-      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-3.6-flash' };
+      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-1.5-flash' };
     } catch (error: any) {
       console.warn(`[GeminiProvider] Primary model failed for rewrite, cascading...`);
       const fallbackModel = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
       });
       const response = await fallbackModel.generateContent(prompt);
-      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-3.6-flash' };
+      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-1.5-flash' };
     }
   }
 
@@ -110,19 +110,19 @@ export class GeminiProvider {
 
     try {
       const model = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         generationConfig: { responseMimeType: 'application/json', temperature: 0.3 },
       });
       const response = await model.generateContent(prompt);
-      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-3.6-flash' };
+      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-1.5-flash' };
     } catch (error: any) {
       console.warn(`[GeminiProvider] Primary model failed for benchmark, cascading...`);
       const fallbackModel = this.client.getGenerativeModel({
-        model: 'gemini-3.6-flash',
+        model: 'gemini-1.5-flash',
         generationConfig: { responseMimeType: 'application/json', temperature: 0.3 },
       });
       const response = await fallbackModel.generateContent(prompt);
-      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-3.6-flash' };
+      return { data: this.parseJson(response.response.text()), modelUsed: 'gemini-1.5-flash' };
     }
   }
 }
