@@ -12,10 +12,7 @@
     "resolveJsonModule": true,
     "declaration": false,
     "sourceMap": true,
-    "paths": {
-      "@shared/*": ["../shared/*"]
-    },
-    "baseUrl": "."
+    "rootDir": ".."
   },
   "include": ["src/**/*.ts", "../shared/**/*.ts"],
   "exclude": ["node_modules", "dist"]
