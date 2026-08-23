@@ -24,7 +24,11 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: [env.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
+    origin: function (origin, callback) {
+      // Allow any origin to accommodate Vercel dynamic preview URLs
+      // and prevent "Network Error" CORS failures in deployment.
+      callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
