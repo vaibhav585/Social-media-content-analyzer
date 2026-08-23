@@ -80,7 +80,8 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
             <span style={{ fontSize: '16px' }}>🪝</span>
           </div>
           <div className="bento-kpi-value">
-            {analysis.breakdown.hookStrength.score}/10
+            {analysis.breakdown.hookStrength.score}
+            <span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/100</span>
           </div>
           <div className="bento-kpi-subtext">Scroll-stopping power</div>
         </div>
@@ -91,7 +92,8 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
             <FileText size={16} color="var(--text-secondary)" />
           </div>
           <div className="bento-kpi-value">
-            {analysis.breakdown.readability.score}/10
+            {analysis.breakdown.readability.score}
+            <span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/100</span>
           </div>
           <div className="bento-kpi-subtext">Cognitive load score</div>
         </div>
@@ -108,24 +110,13 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
         </div>
       </div>
 
-      {/* Row 2: Visuals (Breakdown vs Competitor) */}
+      {/* Row 2: Visuals (Breakdown vs AI Rewriter) */}
       <div className="bento-visual-row">
         <div className="bento-card">
           <h3 className="bento-card-title">Algorithmic Dimension Breakdown</h3>
           <ScoreBreakdown breakdown={analysis.breakdown} />
         </div>
         
-        <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
-          <ComparisonView 
-            analysisId={analysis.id} 
-            userText={analysis.originalText} 
-            platform={analysis.platform} 
-          />
-        </div>
-      </div>
-
-      {/* Row 3: Scrollable Text (Rewrites & Suggestions/Tips) */}
-      <div className="bento-text-row">
         <div className="bento-scroll-card">
           <div className="bento-scroll-header">
             <Sparkles size={18} color="var(--brand-primary)" />
@@ -138,6 +129,17 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
               analysisId={analysis.id} 
             />
           </div>
+        </div>
+      </div>
+
+      {/* Row 3: Scrollable Text (Competitor vs Suggestions/Tips) */}
+      <div className="bento-text-row">
+        <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
+          <ComparisonView 
+            analysisId={analysis.id} 
+            userText={analysis.originalText} 
+            platform={analysis.platform} 
+          />
         </div>
 
         <div className="bento-scroll-card">
