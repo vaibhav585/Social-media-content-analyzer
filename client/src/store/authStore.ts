@@ -164,11 +164,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
    * Sign out the current user.
    */
   signOut: async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw new Error(error.message);
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.warn('Supabase sign out error (ignoring):', error);
+    } finally {
+      // ALWAYS clear local state so the user is forcefully logged out
+      set({ user: null, isAuthenticated: false, isLoading: false });
     }
-    set({ user: null, isAuthenticated: false });
   },
 
   /**
