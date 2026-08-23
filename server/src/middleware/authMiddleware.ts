@@ -3,7 +3,7 @@
 // Verifies Supabase JWT from Authorization header and attaches user to request.
 // =============================================================================
 
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../config/env';
 import type { AuthenticatedRequest } from '../types';
@@ -14,7 +14,7 @@ import type { AuthenticatedRequest } from '../types';
  * On failure, returns 401 Unauthorized.
  */
 export async function authMiddleware(
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -35,7 +35,7 @@ export async function authMiddleware(
     const token = authHeader.substring(7); // Remove "Bearer " prefix
 
     if (token === 'guest_token') {
-      req.user = {
+      (req as any).user = {
         id: 'guest_user',
         email: 'guest@demo.com',
       };
@@ -63,7 +63,7 @@ export async function authMiddleware(
     }
 
     // Attach authenticated user to request
-    req.user = {
+    (req as any).user = {
       id: user.id,
       email: user.email || '',
     };

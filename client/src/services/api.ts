@@ -6,14 +6,14 @@
 import axios from 'axios';
 import { supabase } from './supabaseClient';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 /**
  * Pre-configured Axios instance that automatically attaches the
  * Supabase JWT token to every request.
  */
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${API_BASE_URL}/api`,
   timeout: 60000, // 60s — AI analysis can take time
   headers: {
     'Content-Type': 'application/json',

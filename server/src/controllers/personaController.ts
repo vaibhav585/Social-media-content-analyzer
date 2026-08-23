@@ -4,7 +4,7 @@
 // with past post data via vector embeddings.
 // =============================================================================
 
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { embeddingService } from '../services/ai/embeddingService';
 import { getSupabaseAdmin } from '../services/supabaseService';
 import { env } from '../config/env';
@@ -29,9 +29,10 @@ const guestPersonas: GuestPersona[] = [];
  * GET /api/personas
  * Fetch all personas belonging to the authenticated user.
  */
-export async function listPersonas(req: AuthenticatedRequest, res: Response): Promise<void> {
+
+export async function listPersonas(req: Request, res: Response): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user?.id || 'guest_user';
     
     // Check if Supabase is configured
     if (env.supabaseUrl.includes('placeholder')) {
@@ -78,10 +79,10 @@ export async function listPersonas(req: AuthenticatedRequest, res: Response): Pr
  * Create a new persona and optionally train it with initial text.
  * Body: { name: string, description?: string, trainingText?: string }
  */
-export async function createPersona(req: AuthenticatedRequest, res: Response): Promise<void> {
-  console.log('[PersonaController] createPersona hit. req.user:', req.user, 'req.body.name:', req.body.name);
+export async function createPersona(req: Request, res: Response): Promise<void> {
+  console.log('[PersonaController] createPersona hit. req.user:', (req as any).user, 'req.body.name:', req.body.name);
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user?.id || 'guest_user';
     const { name, description, trainingText } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
@@ -171,9 +172,9 @@ export async function createPersona(req: AuthenticatedRequest, res: Response): P
  * DELETE /api/personas/:id
  * Delete a persona and all its associated embeddings (cascade).
  */
-export async function deletePersona(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function deletePersona(req: Request, res: Response): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user?.id || 'guest_user';
     const personaId = req.params.id;
 
     if (env.supabaseUrl.includes('placeholder')) {
@@ -223,7 +224,7 @@ export async function deletePersona(req: AuthenticatedRequest, res: Response): P
  * This is the core RAG retrieval endpoint.
  * Body: { queryText: string, matchCount?: number }
  */
-export async function queryPersona(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function queryPersona(req: Request, res: Response): Promise<void> {
   try {
     const personaId = req.params.id;
     const { queryText, matchCount = 5 } = req.body;
@@ -232,6 +233,8 @@ export async function queryPersona(req: AuthenticatedRequest, res: Response): Pr
       res.status(400).json({ success: false, error: { message: 'queryText must be at least 10 characters.' } });
       return;
     }
+
+    const userId = (req as any).user?.id || 'guest_user';
 
     // Generate embedding for the query
     const queryEmbedding = await embeddingService.embedText(queryText);

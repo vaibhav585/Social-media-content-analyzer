@@ -47,8 +47,8 @@ export class BenchmarkService {
     // Save to DB asynchronously if configured
     try {
       const supabase = getSupabaseAdmin();
-      supabase.from('benchmarks').insert(benchmarkData).catch((err: any) => {
-        console.error('[BenchmarkService] Failed to save benchmark to Supabase:', err.message);
+      supabase.from('benchmarks').insert(benchmarkData).then(({ error }: any) => {
+        if (error) console.error('[BenchmarkService] Failed to save benchmark to Supabase:', error.message);
       });
     } catch (e) {
       // DB not available, skip saving

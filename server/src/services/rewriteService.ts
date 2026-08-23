@@ -56,8 +56,8 @@ export class RewriteService {
     // Save to DB asynchronously if configured
     try {
       const supabase = getSupabaseAdmin();
-      supabase.from('rewrites').insert(rewriteData).catch((err: any) => {
-        console.error('[RewriteService] Failed to save rewrite to Supabase:', err.message);
+      supabase.from('rewrites').insert(rewriteData).then(({ error }: any) => {
+        if (error) console.error('[RewriteService] Failed to save rewrite to Supabase:', error.message);
       });
     } catch (e) {
       // DB not available, skip saving
