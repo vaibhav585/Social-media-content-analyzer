@@ -28,7 +28,7 @@ export default function SignupPage() {
     try {
       await signUpWithEmail(email, password, fullName);
       addToast({ type: 'success', title: 'Account created successfully!' });
-      navigate('/');
+      navigate('/analyze');
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {

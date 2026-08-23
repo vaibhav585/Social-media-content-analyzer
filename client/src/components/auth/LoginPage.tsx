@@ -27,7 +27,7 @@ export default function LoginPage() {
     try {
       await signInWithEmail(email, password);
       addToast({ type: 'success', title: 'Welcome back!' });
-      navigate('/');
+      navigate('/analyze');
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
     } finally {
@@ -40,7 +40,7 @@ export default function LoginPage() {
   const handleGuestLogin = () => {
     useAuthStore.getState().signInAsGuest();
     addToast({ type: 'info', title: 'Entered Demo Mode', message: 'Explore the full dashboard & upload interface.' });
-    navigate('/');
+    navigate('/analyze');
   };
 
   return (
