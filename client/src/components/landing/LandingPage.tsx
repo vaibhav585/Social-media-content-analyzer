@@ -68,10 +68,7 @@ export default function LandingPage() {
             {isAuthenticated ? (
               <Link to="/analyze" className="btn btn-primary btn-large">Go to Dashboard</Link>
             ) : (
-              <>
-                <Link to="/signup" className="btn btn-primary btn-large">Start Analyzing</Link>
-                <Link to="/login" className="btn btn-outline btn-large">View Demo</Link>
-              </>
+              <Link to="/login" className="btn btn-primary btn-large">Start Analyzing</Link>
             )}
           </motion.div>
         </div>

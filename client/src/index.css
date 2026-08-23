@@ -1538,9 +1538,12 @@ a:hover {
 .landing-login-link {
   color: var(--text-primary) !important;
   font-weight: 600 !important;
+  white-space: nowrap;
 }
 .landing-cta-nav {
   padding: 8px 16px;
+  color: white !important;
+  white-space: nowrap;
 }
 
 /* Hero */
