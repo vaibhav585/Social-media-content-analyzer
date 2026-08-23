@@ -46,11 +46,10 @@ export default function SignupPage() {
 
   return (
     <div className="auth-page">
-      {/* Animated background */}
+      {/* Modern Tech Grid & Radial Glow Background */}
       <div className="auth-bg">
-        <div className="auth-bg-orb auth-bg-orb--1" />
-        <div className="auth-bg-orb auth-bg-orb--2" />
-        <div className="auth-bg-orb auth-bg-orb--3" />
+        <div className="auth-grid-pattern" />
+        <div className="auth-radial-glow" />
       </div>
 
       <motion.div
