@@ -2006,6 +2006,7 @@ a:hover {
   display: grid;
   grid-template-columns: 3fr 2fr;
   gap: 20px;
+  height: 500px;
 }
 .bento-card {
   background: var(--bg-primary);
@@ -2015,6 +2016,8 @@ a:hover {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
 }
 .bento-card-title {
   font-size: 16px;
@@ -2022,6 +2025,7 @@ a:hover {
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 /* Row 3: Scrollable Text Sections */
@@ -2029,6 +2033,7 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  height: 500px;
 }
 .bento-scroll-card {
   background: var(--bg-primary);
@@ -2037,7 +2042,7 @@ a:hover {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 100%;
   overflow: hidden;
 }
 .bento-scroll-header {
@@ -2049,6 +2054,7 @@ a:hover {
   align-items: center;
   gap: 8px;
   z-index: 10;
+  flex-shrink: 0;
 }
 .bento-scroll-content {
   padding: 20px;
