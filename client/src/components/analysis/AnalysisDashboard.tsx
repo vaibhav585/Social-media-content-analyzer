@@ -37,7 +37,7 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
 
   return (
     <motion.div
-      className="analysis-dashboard"
+      className="bento-dashboard-wrapper"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -58,89 +58,100 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
         </div>
       </div>
 
-      {/* Original Content Snippet Card */}
-      <div className="original-content-card">
-        <div className="original-content-header" onClick={() => setShowFullText(!showFullText)}>
-          <div className="original-content-meta">
-            <FileText size={16} className="text-indigo-400" />
-            <span className="original-content-platform flex items-center gap-1.5" style={{ color: platformConfig.color }}>
-              {React.createElement(platformConfig.icon as React.ElementType, { size: 16 })} {platformConfig.name} Post Content
-            </span>
-            <span className="original-content-length">({analysis.originalText.length} characters)</span>
+      {/* Row 1: Top KPI Cards */}
+      <div className="bento-kpi-row">
+        <div className="bento-kpi-card">
+          <div className="bento-kpi-header">
+            <span>Viral Potential</span>
+            <Sparkles size={16} className="text-indigo-400" />
           </div>
-
-          <button className="expand-toggle-btn" aria-label="Toggle content snippet">
-            {showFullText ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </button>
+          <div className="bento-kpi-value">
+            {analysis.engagementScore}
+            <span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/100</span>
+          </div>
+          <div className={`bento-kpi-trend ${analysis.engagementScore >= 80 ? 'positive' : 'warning'}`}>
+            {analysis.engagementScore >= 80 ? '↗ Ready to go viral' : '↘ Needs optimization'}
+          </div>
         </div>
 
-        <div className={`original-content-body ${showFullText ? 'expanded' : 'collapsed'}`}>
-          <p className="original-text">{analysis.originalText}</p>
+        <div className="bento-kpi-card">
+          <div className="bento-kpi-header">
+            <span>Hook Strength</span>
+            <span style={{ fontSize: '16px' }}>🪝</span>
+          </div>
+          <div className="bento-kpi-value">
+            {analysis.breakdown.hookStrength.score}/10
+          </div>
+          <div className="bento-kpi-subtext">Scroll-stopping power</div>
+        </div>
+
+        <div className="bento-kpi-card">
+          <div className="bento-kpi-header">
+            <span>Readability</span>
+            <FileText size={16} color="var(--text-secondary)" />
+          </div>
+          <div className="bento-kpi-value">
+            {analysis.breakdown.readability.score}/10
+          </div>
+          <div className="bento-kpi-subtext">Cognitive load score</div>
+        </div>
+
+        <div className="bento-kpi-card">
+          <div className="bento-kpi-header">
+            <span>Platform Target</span>
+            {React.createElement(platformConfig.icon as React.ElementType, { size: 16, color: platformConfig.color })}
+          </div>
+          <div className="bento-kpi-value" style={{ fontSize: '24px', paddingTop: '4px' }}>
+            {platformConfig.name}
+          </div>
+          <div className="bento-kpi-subtext">Optimized for algorithm</div>
         </div>
       </div>
 
-      {/* Main Grid: Gauge + 5-Dimension Scorecard */}
-      <div className="dashboard-main-grid">
-        {/* Left Column: Gauge & Overall Insights */}
-        <div className="dashboard-score-summary-card">
-          <div className="summary-card-header">
-            <h3 className="summary-card-title">Overall Viral & Engagement Potential</h3>
-          </div>
-
-          <EngagementGauge score={analysis.engagementScore} />
-
-          <div className="summary-highlights">
-            <div className="summary-highlight-item">
-              <span className="highlight-label">Target Platform</span>
-              <span className="highlight-value" style={{ color: platformConfig.color }}>
-                {platformConfig.name}
-              </span>
-            </div>
-            <div className="summary-highlight-item">
-              <span className="highlight-label">Optimization Score</span>
-              <span className="highlight-value">{analysis.engagementScore}/100</span>
-            </div>
-            <div className="summary-highlight-item">
-              <span className="highlight-label">Algorithm Readiness</span>
-              <span className="highlight-value text-indigo-400">
-                {analysis.engagementScore >= 75 ? 'Ready to Publish' : 'Optimizations Suggested'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: 5 Breakdown Categories */}
-        <div className="dashboard-breakdown-card">
-          <div className="breakdown-card-header">
-            <h3 className="breakdown-card-title">5-Dimension Algorithmic Breakdown</h3>
-            <span className="breakdown-card-badge">Detailed Evaluation</span>
-          </div>
-
+      {/* Row 2: Visuals (Breakdown vs Competitor) */}
+      <div className="bento-visual-row">
+        <div className="bento-card">
+          <h3 className="bento-card-title">Algorithmic Dimension Breakdown</h3>
           <ScoreBreakdown breakdown={analysis.breakdown} />
         </div>
-      </div>
-
-      {/* Secondary Grid: Suggestions & Platform Specific Advice */}
-      <div className="dashboard-secondary-grid">
-        <SuggestionsList suggestions={analysis.suggestions} />
-
-        {/* Phase 3: Content Rewriter */}
-        <ContentRewriter 
-          originalText={analysis.originalText} 
-          platform={analysis.platform} 
-          analysisId={analysis.id} 
-        />
         
-        <PlatformTips platform={analysis.platform} tips={analysis.platformTips} />
+        <div className="bento-card" style={{ padding: 0, overflow: 'hidden' }}>
+          <ComparisonView 
+            analysisId={analysis.id} 
+            userText={analysis.originalText} 
+            platform={analysis.platform} 
+          />
+        </div>
       </div>
 
-      {/* Phase 3: Competitor Benchmark */}
-      <div className="mt-6">
-        <ComparisonView 
-          analysisId={analysis.id} 
-          userText={analysis.originalText} 
-          platform={analysis.platform} 
-        />
+      {/* Row 3: Scrollable Text (Rewrites & Suggestions/Tips) */}
+      <div className="bento-text-row">
+        <div className="bento-scroll-card">
+          <div className="bento-scroll-header">
+            <Sparkles size={18} color="var(--brand-primary)" />
+            AI Content Rewriter
+          </div>
+          <div className="bento-scroll-content">
+            <ContentRewriter 
+              originalText={analysis.originalText} 
+              platform={analysis.platform} 
+              analysisId={analysis.id} 
+            />
+          </div>
+        </div>
+
+        <div className="bento-scroll-card">
+          <div className="bento-scroll-header">
+            <span style={{ fontSize: '18px' }}>💡</span>
+            Actionable Suggestions
+          </div>
+          <div className="bento-scroll-content">
+            <SuggestionsList suggestions={analysis.suggestions} />
+            <div style={{ marginTop: '24px' }}>
+              <PlatformTips platform={analysis.platform} tips={analysis.platformTips} />
+            </div>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
