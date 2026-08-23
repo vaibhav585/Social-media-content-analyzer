@@ -131,8 +131,8 @@ export function ContentRewriter({ originalText, platform, analysisId }: ContentR
           )}
         </div>
       ) : (
-        <div style={{ background: 'var(--bg-primary)', borderRadius: '12px', border: '1px solid var(--border-color)', padding: '20px', maxHeight: '400px', overflowY: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)', position: 'sticky', top: '-20px', background: 'var(--bg-primary)', zIndex: 10, paddingTop: '20px', marginTop: '-20px' }}>
+        <div style={{ background: 'var(--bg-primary)', borderRadius: '12px', border: '1px solid var(--border-color)', padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
             <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', margin: 0 }}>
               <Sparkles size={16} color="var(--brand-primary)" /> 
               AI Optimized Content
