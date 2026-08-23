@@ -478,6 +478,69 @@ a:hover {
 .page-header {
   margin-bottom: 32px;
 }
+.dashboard-bento {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.bento-sidebar {
+  position: sticky;
+  top: 96px; /* Offset for Header */
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.bento-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.bento-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.bento-main {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.bento-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px dashed var(--border-color);
+  border-radius: 16px;
+  text-align: center;
+  padding: 40px;
+}
+
+/* Make sure the nested dashboard doesn't have a max width now that it's in a grid */
+.analysis-dashboard {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-bento {
+    grid-template-columns: 1fr;
+  }
+  .bento-sidebar {
+    position: relative;
+    top: 0;
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
 .page-title {
   font-size: 32px;
   color: var(--text-primary);
@@ -486,17 +549,6 @@ a:hover {
 .page-subtitle {
   color: var(--text-secondary);
   font-size: 16px;
-}
-
-.analyze-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-@media (min-width: 1024px) {
-  .analyze-grid {
-    grid-template-columns: 3fr 2fr;
-  }
 }
 
 .analyze-section {

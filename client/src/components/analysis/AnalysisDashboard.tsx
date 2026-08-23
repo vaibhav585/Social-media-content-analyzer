@@ -42,22 +42,6 @@ export default function AnalysisDashboard({ analysis }: AnalysisDashboardProps) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Top Navigation Bar */}
-      <div className="dashboard-top-nav">
-        <button className="back-btn" onClick={reset}>
-          <ArrowLeft size={18} />
-          <span>Analyze Another Post</span>
-        </button>
-
-        <div className="dashboard-badges">
-          <SentimentBadge sentiment={analysis.sentiment} />
-          <AIProviderBadge provider={analysis.aiProvider} latencyMs={analysis.processingTimeMs} />
-          <button className="share-btn" onClick={handleShare} title="Share analysis">
-            <Share2 size={16} />
-          </button>
-        </div>
-      </div>
-
       {/* Original Content Snippet Card */}
       <div className="original-content-card">
         <div className="original-content-header" onClick={() => setShowFullText(!showFullText)}>
