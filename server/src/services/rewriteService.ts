@@ -1,6 +1,6 @@
 import { aiOrchestrator } from './ai/aiOrchestrator';
 import { embeddingService } from './ai/embeddingService';
-import { supabaseAdmin } from './supabaseService';
+import { getSupabaseAdmin } from './supabaseService';
 import type { RewriteRequest, RewriteResponse, Rewrite, RewriteGoal } from '../types';
 
 export class RewriteService {
@@ -15,8 +15,9 @@ export class RewriteService {
         console.log(`[RewriteService] RAG: Retrieving tone examples for persona ${personaId}...`);
         const queryEmbedding = await embeddingService.embedText(text);
 
-        if (supabaseAdmin) {
-          const { data, error } = await supabaseAdmin.rpc('match_persona_embeddings', {
+        try {
+          const supabase = getSupabaseAdmin();
+          const { data, error } = await supabase.rpc('match_persona_embeddings', {
             query_embedding: JSON.stringify(queryEmbedding),
             match_persona_id: personaId,
             match_threshold: 0.3,
@@ -29,6 +30,8 @@ export class RewriteService {
           } else {
             console.log('[RewriteService] RAG: No matching examples found, proceeding without tone-matching.');
           }
+        } catch (dbError: any) {
+          console.warn(`[RewriteService] DB RAG query failed (non-fatal): ${dbError.message}`);
         }
       } catch (ragError: any) {
         console.warn(`[RewriteService] RAG retrieval failed (non-fatal): ${ragError.message}`);
@@ -51,10 +54,13 @@ export class RewriteService {
     };
 
     // Save to DB asynchronously if configured
-    if (supabaseAdmin) {
-      supabaseAdmin.from('rewrites').insert(rewriteData).catch((err) => {
+    try {
+      const supabase = getSupabaseAdmin();
+      supabase.from('rewrites').insert(rewriteData).catch((err: any) => {
         console.error('[RewriteService] Failed to save rewrite to Supabase:', err.message);
       });
+    } catch (e) {
+      // DB not available, skip saving
     }
 
     // Since RewriteResponse requires `variants` array (per types), wrap the result

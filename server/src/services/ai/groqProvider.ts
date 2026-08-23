@@ -1,7 +1,7 @@
 // =============================================================================
 // Groq Provider
-// Ultra-fast LLM inference using Groq SDK (Llama 3.3 70B & 3.1 8B).
-// Layer 3 fallback when Gemini rate limits are reached or during peak traffic.
+// Ultra-fast LLM inference using Groq SDK.
+// Layer 2 fallback when Gemini rate limits are reached or during peak traffic.
 // =============================================================================
 
 import Groq from 'groq-sdk';
@@ -19,7 +19,21 @@ export class GroqProvider {
   }
 
   /**
-   * Runs content analysis via Groq with internal model cascade (Llama 3.3 70B -> Llama 3.1 8B).
+   * Extracts JSON from a response that may contain markdown code fences or plain text.
+   */
+  private extractJson<T>(raw: string): T {
+    let clean = raw.trim();
+    // Remove markdown code fences if present
+    if (clean.startsWith('```json')) {
+      clean = clean.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (clean.startsWith('```')) {
+      clean = clean.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+    return JSON.parse(clean);
+  }
+
+  /**
+   * Runs content analysis via Groq with internal model cascade.
    */
   public async analyzeContent(
     text: string,
@@ -33,35 +47,33 @@ export class GroqProvider {
       const response = await this.client.chat.completions.create({
         model: 'groq/compound',
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: systemPrompt + '\n\nYou MUST respond with valid JSON only. No markdown, no explanation.' },
           { role: 'user', content: userPrompt },
         ],
-        response_format: { type: 'json_object' },
         temperature: 0.3,
       });
 
       const raw = response.choices[0]?.message?.content || '{}';
-      const parsed = JSON.parse(raw);
-      return { data: parsed as AnalysisResult, modelUsed: 'groq-llama3-70b' };
+      const parsed = this.extractJson<AnalysisResult>(raw);
+      return { data: parsed, modelUsed: 'groq-compound' };
     } catch (primaryError: any) {
       console.warn(
-        `[GroqProvider] Primary llama3-70b failed: ${primaryError?.message}. Cascading to llama3-8b...`
+        `[GroqProvider] Primary groq/compound failed: ${primaryError?.message}. Cascading to compound-mini...`
       );
 
       // Fallback: groq/compound-mini
       const fallbackResponse = await this.client.chat.completions.create({
         model: 'groq/compound-mini',
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: systemPrompt + '\n\nYou MUST respond with valid JSON only. No markdown, no explanation.' },
           { role: 'user', content: userPrompt },
         ],
-        response_format: { type: 'json_object' },
         temperature: 0.3,
       });
 
       const raw = fallbackResponse.choices[0]?.message?.content || '{}';
-      const parsed = JSON.parse(raw);
-      return { data: parsed as AnalysisResult, modelUsed: 'groq-llama3-8b' };
+      const parsed = this.extractJson<AnalysisResult>(raw);
+      return { data: parsed, modelUsed: 'groq-compound-mini' };
     }
   }
 
@@ -77,21 +89,19 @@ export class GroqProvider {
       const response = await this.client.chat.completions.create({
         model: 'groq/compound',
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
         temperature: 0.7,
       });
       const raw = response.choices[0]?.message?.content || '{}';
-      return { data: JSON.parse(raw), modelUsed: 'groq-llama3-70b' };
-    } catch (error) {
-      console.warn(`[GroqProvider] Primary rewrite failed, cascading to 8b...`, error);
+      return { data: this.extractJson(raw), modelUsed: 'groq-compound' };
+    } catch (error: any) {
+      console.warn(`[GroqProvider] Primary rewrite failed, cascading...`, error?.message);
       const fallbackResponse = await this.client.chat.completions.create({
         model: 'groq/compound-mini',
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
         temperature: 0.7,
       });
       const raw = fallbackResponse.choices[0]?.message?.content || '{}';
-      return { data: JSON.parse(raw), modelUsed: 'groq-llama3-8b' };
+      return { data: this.extractJson(raw), modelUsed: 'groq-compound-mini' };
     }
   }
 
@@ -106,21 +116,19 @@ export class GroqProvider {
       const response = await this.client.chat.completions.create({
         model: 'groq/compound',
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
         temperature: 0.3,
       });
       const raw = response.choices[0]?.message?.content || '{}';
-      return { data: JSON.parse(raw), modelUsed: 'groq-llama3-70b' };
-    } catch (error) {
-      console.warn(`[GroqProvider] Primary benchmark failed, cascading to 8b...`, error);
+      return { data: this.extractJson(raw), modelUsed: 'groq-compound' };
+    } catch (error: any) {
+      console.warn(`[GroqProvider] Primary benchmark failed, cascading...`, error?.message);
       const fallbackResponse = await this.client.chat.completions.create({
         model: 'groq/compound-mini',
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
         temperature: 0.3,
       });
       const raw = fallbackResponse.choices[0]?.message?.content || '{}';
-      return { data: JSON.parse(raw), modelUsed: 'groq-llama3-8b' };
+      return { data: this.extractJson(raw), modelUsed: 'groq-compound-mini' };
     }
   }
 }

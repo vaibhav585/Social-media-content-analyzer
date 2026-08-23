@@ -41,4 +41,13 @@ function formatUptime(ms: number): string {
   return `${seconds}s`;
 }
 
+/**
+ * POST /api/health/reset-breakers
+ * Manually resets all AI circuit breakers to CLOSED state.
+ */
+router.post('/reset-breakers', (_req: Request, res: Response) => {
+  aiOrchestrator.resetBreakers();
+  res.json({ success: true, message: 'All circuit breakers reset to CLOSED.' });
+});
+
 export default router;

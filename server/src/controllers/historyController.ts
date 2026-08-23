@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { supabaseAdmin } from '../services/supabaseService';
-import type { AnalysisHistoryResponse } from '../../shared/types';
+import { getSupabaseAdmin } from '../services/supabaseService';
 
 export const getHistory = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +13,8 @@ export const getHistory = async (req: Request, res: Response, next: NextFunction
     let total = 0;
     let analyses: any[] = [];
 
-    if (supabaseAdmin) {
+    try {
+      const supabaseAdmin = getSupabaseAdmin();
       const { count } = await supabaseAdmin
         .from('analyses')
         .select('*', { count: 'exact', head: true })
@@ -30,12 +30,11 @@ export const getHistory = async (req: Request, res: Response, next: NextFunction
         .range(offset, offset + limit - 1);
         
       if (data) analyses = data;
+    } catch (dbError: any) {
+      console.warn('[HistoryController] DB query failed (non-fatal):', dbError.message);
     }
 
-    // Convert from camelCase to snake_case if necessary, 
-    // but assuming DB mapping is handled or it matches type exactly.
-
-    const response: AnalysisHistoryResponse = {
+    const response = {
       analyses,
       total,
       page,

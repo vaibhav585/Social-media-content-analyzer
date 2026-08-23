@@ -267,6 +267,16 @@ export class AIOrchestrator {
     const hasKey = Boolean(env.groqApiKey && env.groqApiKey !== 'gsk_...' && !env.groqApiKey.includes('placeholder'));
     return hasKey && this.groqBreaker.isAvailable() && this.rateLimiter.canMakeRequest('groq');
   }
+
+  /**
+   * Resets all circuit breakers to CLOSED state.
+   * Useful after fixing API key issues or model changes.
+   */
+  public resetBreakers(): void {
+    this.geminiBreaker.reset();
+    this.groqBreaker.reset();
+    console.log('[AI Orchestrator] All circuit breakers have been reset to CLOSED ✅');
+  }
 }
 
 // Singleton export
