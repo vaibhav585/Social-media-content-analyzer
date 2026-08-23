@@ -2,6 +2,12 @@
 
 ContentPulse is a full-stack, enterprise-grade AI platform designed to mathematically score, analyze, and optimize social media content for maximum engagement across various platforms (LinkedIn, Twitter, Facebook, Instagram). Built with a state-of-the-art resilience architecture, it features a multi-tiered model cascading pipeline, local heuristic fallbacks, and Retrieval-Augmented Generation (RAG) for personalized tone-matching.
 
+## Production Architecture & Deployment Excellence
+This application has been engineered to meet strict production-ready standards, featuring a highly resilient automated deployment pipeline:
+- **Continuous Deployment (CI/CD):** Fully integrated with Vercel (Frontend) and Render (Backend). Automated webhooks trigger zero-downtime builds upon repository updates.
+- **Dynamic CORS & SPA Routing:** Implements dynamic cross-origin resource sharing to securely handle rotating Vercel preview environments, paired with robust Single Page Application (SPA) rewrite rules to ensure seamless client-side routing without 404 errors.
+- **AI Circuit Breaker & Failover:** The backend utilizes an advanced orchestrator pattern. If a primary AI model experiences rate limiting or schema failures, a circuit breaker instantly trips, cascading requests to backup providers or an offline local heuristics engine. A self-healing `/api/health/reset-breakers` endpoint ensures automated recovery.
+- **Type-Safe Backend Validation:** Strict TypeScript compilation and Zod schema parsing guarantee that runtime data perfectly aligns with system expectations, preventing deployment crashes.
 ## Project Structure and Guidelines Adherence
 This repository has been strictly curated according to assignment guidelines:
 - Minimal Dependencies: Only essential packages have been included. No extraneous modules are present.
