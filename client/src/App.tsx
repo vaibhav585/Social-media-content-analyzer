@@ -9,6 +9,7 @@ import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
 import AnalyzePage from './components/analysis/AnalyzePage';
 
+import LandingPage from './components/landing/LandingPage';
 import HistoryPage from './components/history/HistoryPage';
 import { PersonaManager } from './components/persona/PersonaManager';
 
@@ -35,13 +36,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected Routes inside AppShell */}
         <Route element={<AuthGuard />}>
           <Route element={<AppShell />}>
-            <Route path="/" element={<Navigate to="/analyze" replace />} />
             <Route path="/analyze" element={<AnalyzePage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />

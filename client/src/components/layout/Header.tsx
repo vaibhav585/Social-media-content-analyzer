@@ -2,7 +2,7 @@
 // Header
 // Top navigation bar with logo and user menu.
 // =============================================================================
-
+import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import UserMenu from '../auth/UserMenu';
@@ -20,7 +20,7 @@ export default function Header() {
         >
           <Menu size={24} />
         </button>
-        <div className="header-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Link to="/analyze" className="header-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="32" height="32" rx="8" fill="var(--brand-primary)" fillOpacity="0.1" />
@@ -30,7 +30,7 @@ export default function Header() {
             </svg>
           </div>
           <span className="header-title" style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.5px' }}>ContentPulse</span>
-        </div>
+        </Link>
       </div>
       
       <div className="header-right">
