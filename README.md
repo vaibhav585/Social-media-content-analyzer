@@ -1,4 +1,4 @@
-# ContentPulse: Social Media Content Analyzer (contentpulse-eight.vercel.app)
+# ContentPulse: Social Media Content Analyzer
 
 ContentPulse is a full-stack, enterprise-grade AI platform designed to mathematically score, analyze, and optimize social media content for maximum engagement across various platforms (LinkedIn, Twitter, Facebook, Instagram). Built with a state-of-the-art resilience architecture, it features a multi-tiered model cascading pipeline, local heuristic fallbacks, and Retrieval-Augmented Generation (RAG) for personalized tone-matching.
 
