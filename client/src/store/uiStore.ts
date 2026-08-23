@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { create } from 'zustand';
+import toast from 'react-hot-toast';
 import type { Theme, SidebarView, ToastMessage } from '../types';
 
 interface UIStore {
@@ -73,23 +74,23 @@ export const useUIStore = create<UIStore>((set) => ({
   // ── Toasts ───────────────────────────────────────────────────────────────
   toasts: [],
 
-  addToast: (toast) =>
-    set((state) => {
-      const id = generateId();
-      const newToast: ToastMessage = { ...toast, id };
+  addToast: (newToast) => {
+    // We map our custom toast interface to react-hot-toast
+    const toastConfig = {
+      duration: newToast.duration || 5000,
+      position: 'bottom-right' as const,
+    };
 
-      // Auto-remove after duration (default 5 seconds)
-      setTimeout(() => {
-        set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }));
-      }, toast.duration || 5000);
+    if (newToast.type === 'success') {
+      toast.success(newToast.message || newToast.title, toastConfig);
+    } else if (newToast.type === 'error') {
+      toast.error(newToast.message || newToast.title, toastConfig);
+    } else {
+      toast(newToast.message || newToast.title, { ...toastConfig, icon: 'ℹ️' });
+    }
+  },
 
-      return { toasts: [...state.toasts, newToast] };
-    }),
-
-  removeToast: (id) =>
-    set((state) => ({
-      toasts: state.toasts.filter((t) => t.id !== id),
-    })),
+  removeToast: (id) => toast.dismiss(id),
 
   // ── Loading States ───────────────────────────────────────────────────────
   isAnalyzing: false,

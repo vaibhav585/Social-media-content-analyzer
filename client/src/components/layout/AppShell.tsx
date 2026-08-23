@@ -4,15 +4,11 @@
 // =============================================================================
 
 import { Outlet } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useUIStore } from '../../store/uiStore';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 export default function AppShell() {
-  const { toasts, removeToast } = useUIStore();
-
   return (
     <div className="app-shell">
       <Header />
@@ -25,38 +21,18 @@ export default function AppShell() {
         </main>
       </div>
 
-      {/* Toast Notification Container */}
-      <div className="toast-container">
-        <AnimatePresence>
-          {toasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, x: 50, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 50, scale: 0.9 }}
-              className={`toast toast--${toast.type}`}
-            >
-              <div className="toast-icon">
-                {toast.type === 'success' && <CheckCircle size={20} />}
-                {toast.type === 'error' && <AlertCircle size={20} />}
-                {toast.type === 'info' && <Info size={20} />}
-                {toast.type === 'warning' && <AlertCircle size={20} />}
-              </div>
-              <div className="toast-content">
-                <h4 className="toast-title">{toast.title}</h4>
-                {toast.message && <p className="toast-message">{toast.message}</p>}
-              </div>
-              <button
-                className="toast-close"
-                onClick={() => removeToast(toast.id)}
-                aria-label="Close notification"
-              >
-                <X size={16} />
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-color)',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+            borderRadius: '12px',
+          },
+        }}
+      />
     </div>
   );
 }

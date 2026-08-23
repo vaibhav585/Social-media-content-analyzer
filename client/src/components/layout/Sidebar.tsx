@@ -39,18 +39,6 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="sidebar-footer">
-        <div className="sidebar-quota-card">
-          <div className="sidebar-quota-header">
-            <BarChart2 size={16} />
-            <span>Usage</span>
-          </div>
-          <div className="sidebar-quota-progress">
-            <div className="sidebar-quota-bar" style={{ width: '45%' }} />
-          </div>
-          <p className="sidebar-quota-text">45 / 100 analyzes this month</p>
-        </div>
-      </div>
     </aside>
   );
 }

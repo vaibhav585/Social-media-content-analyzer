@@ -1375,3 +1375,15 @@ a:hover {
   transform: translateY(-1px);
 }
 
+
+/* Logout Button UI Update */
+.logout-btn {
+  transition: all 0.2s ease;
+}
+.logout-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+}
+.logout-btn:hover svg {
+  stroke: #ef4444 !important;
+}

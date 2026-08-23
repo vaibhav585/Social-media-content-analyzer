@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, User as UserIcon } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
@@ -44,25 +45,33 @@ export default function UserMenu() {
         )}
       </button>
 
-      {isOpen && (
-        <div className="user-menu-dropdown">
-          <div className="user-menu-header">
-            <p className="user-menu-name">{user.fullName || 'User'}</p>
-            <p className="user-menu-email">{user.email}</p>
-          </div>
-          <div className="user-menu-divider" />
-          <button
-            className="user-menu-item"
-            onClick={() => {
-              setIsOpen(false);
-              signOut();
-            }}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="user-menu-dropdown"
           >
-            <LogOut size={16} />
-            <span>Sign out</span>
-          </button>
-        </div>
-      )}
+            <div className="user-menu-header">
+              <p className="user-menu-name">{user.fullName || 'User'}</p>
+              <p className="user-menu-email">{user.email}</p>
+            </div>
+            <div className="user-menu-divider" />
+            <button
+              className="user-menu-item logout-btn"
+              onClick={() => {
+                setIsOpen(false);
+                signOut();
+              }}
+            >
+              <LogOut size={16} />
+              <span>Sign out</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
