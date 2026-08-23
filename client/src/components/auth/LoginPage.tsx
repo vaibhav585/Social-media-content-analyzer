@@ -71,8 +71,14 @@ export default function LoginPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            style={{ background: 'transparent', boxShadow: 'none' }}
           >
-            <span className="auth-logo-icon">📊</span>
+            <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="var(--brand-primary)" fillOpacity="0.1" />
+              <path d="M8 16L13 21L19 11L24 16" stroke="var(--brand-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="13" cy="21" r="2" fill="var(--brand-primary)" />
+              <circle cx="19" cy="11" r="2" fill="var(--brand-primary)" />
+            </svg>
           </motion.div>
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">Sign in to analyze your social media content</p>
